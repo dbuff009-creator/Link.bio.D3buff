@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#ffffff" />
+  <title>D3buff</title>
+  <link rel="icon" type="image/png" href="image/icon.png" />
+  <link rel="apple-touch-icon" href="image/icon.png" />
+  <link rel="stylesheet" href="css/fonts.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="css/style.css?v=45" />
+</head>
+<body>
+
+  <div id="bg">
+    <div id="bg-pattern"></div>
+    <div id="bg-gradient" style="display:none"></div>
+    <img id="bg-image" style="display:none" alt="" />
+    <video id="bg-video" autoplay muted loop playsinline style="display:none"></video>
+    <div id="bg-dim"></div>
+    <div id="bg-vignette"></div>
+    <div id="bg-overlay"></div>
+  </div>
+
+  <canvas id="fx-canvas"></canvas>
+
+  <div id="enter-screen" style="display:none">
+    <div class="enter-glow"></div>
+    <div id="enter-avatar-wrap"></div>
+    <p class="enter-text" id="enter-text">Click to enter</p>
+    <p class="enter-sub" id="enter-sub"></p>
+  </div>
+
+  <main id="page">
+    <div class="container" id="container"></div>
+  </main>
+
+  <div id="music-dock" class="music-dock">
+    <button class="music-dock-collapse" id="music-close" type="button" aria-label="Свернуть плеер"></button>
+    <div class="music-dock-shell" id="music-dock-shell">
+      <button class="music-mini" id="music-mini" type="button" aria-label="Открыть плеер">
+        <span class="music-mini-icon" id="music-open"></span>
+        <div class="music-mini-marquee">
+          <div class="music-mini-track" id="music-mini-track">
+            <span class="music-mini-label" id="music-mini-text"></span>
+          </div>
+        </div>
+      </button>
+      <div class="music-dock-panel" id="music-dock-panel">
+        <div class="music-dock-progress">
+          <span class="music-time" id="time-cur">0:00</span>
+          <div class="music-bar" id="music-bar">
+            <div class="music-bar-fill" id="music-fill"></div>
+          </div>
+          <span class="music-time" id="time-end">0:00</span>
+        </div>
+        <div class="music-dock-row">
+          <div class="music-dock-left">
+            <div class="music-viz-bars" id="music-viz" aria-hidden="true"></div>
+            <div class="music-dock-meta">
+              <div class="music-dock-title" id="float-title"></div>
+              <div class="music-dock-artist" id="float-artist"></div>
+            </div>
+          </div>
+          <div class="music-dock-center">
+            <button class="music-dock-skip" id="music-prev" type="button" aria-label="Предыдущий трек"></button>
+            <button class="music-dock-play" id="music-toggle" type="button" aria-label="Play"></button>
+            <button class="music-dock-skip" id="music-next" type="button" aria-label="Следующий трек"></button>
+          </div>
+          <div class="music-dock-right">
+            <span class="music-vol-icon" id="vol-icon"></span>
+            <input type="range" class="music-vol-slider" id="volume-slider" min="0" max="100" value="45" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <audio id="audio" preload="auto"></audio>
+  </div>
+
+  <div id="footer"></div>
+
+  <script src="config.js?v=45"></script>
+  <script src="js/icons.js?v=45"></script>
+  <script src="js/stats.js?v=45"></script>
+  <script src="js/effects.js?v=45"></script>
+  <script src="js/app.js?v=45"></script>
+</body>
+</html>

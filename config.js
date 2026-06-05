@@ -1,0 +1,137 @@
+/* ═══════════════════════════════════════════════════════════════
+   НАСТРОЙКА — меняй только этот файл
+   ═══════════════════════════════════════════════════════════════ */
+
+const CONFIG = {
+  site: {
+    favicon: "image/icon.png",
+    titleTypewriter: true,
+    typewriterSpeed: 88,
+  },
+
+  profile: {
+    displayName: "D3buff",
+    avatar: "image/avatar.jpg",
+    avatarCrop: "center 72%",
+    tags: ["Graphic designer", "Furry", "Gmod player"],
+    pronouns: "He || his",
+    location: "Russian federation",
+  },
+
+  counter: {
+    namespace: "d3buff-live",
+  },
+
+  fonts: {
+    body: "Inter",
+    display: "Humane",
+    name: "MangoGrotesque",
+  },
+
+  theme: {
+    accent: "#ffffff",
+    accentHover: "#e5e5e5",
+    text: "#ffffff",
+    textMuted: "#a3a3a3",
+    cardBg: "rgba(8, 8, 10, 0.72)",
+    cardBorder: "rgba(255, 255, 255, 0.06)",
+    cardRadius: 30,
+    glow: false,
+  },
+
+  banner: {
+    enabled: true,
+    image: "https://r2.fakecrime.bio/banners/6980d32e-63ab-4a15-9109-d5f67ee81da4.png",
+  },
+
+  background: {
+    type: "video",
+    video: "back/bg.mp4",
+    image: "",
+    overlay: 0.55,
+    blur: 0,
+    dimColor: "rgba(0,0,0,0.4)",
+    vignette: false,
+  },
+
+  enter: {
+    enabled: false,
+  },
+
+  social: [
+    { id: "telegram", url: "https://t.me/TheD3buff", label: "Tg channel" },
+    { id: "discord", url: "https://discord.com/users/976212073790980117/", label: "Discord" },
+  ],
+
+  links: [
+    {
+      id: "steam",
+      title: "Основной акк",
+      description: "тут все мои игры можем поиграть и т.д.",
+      url: "https://steamcommunity.com/profiles/76561198739087972/",
+    },
+  ],
+
+  portfolio: {
+    enabled: true,
+    title: "Portfolio D3buff",
+    description: "Графический дизайн — мои работы и проекты",
+    url: "https://dbuff009-creator.github.io/Portfolio-D3buff-Design/",
+    icon: "palette",
+  },
+
+  /* Discord статус (Lanyard) — отключён */
+  discord: {
+    enabled: false,
+    userId: "976212073790980117",
+  },
+
+  discordServer: {
+    enabled: true,
+    guildId: "1257766638883705006",
+    name: "FRND Squad!",
+    tag: "FRND squad",
+    icon: "image/Server.png",
+    description: "Это сообщество друзей без сорр и оскорблений",
+    invite: "https://discord.gg/em6GrsH933",
+  },
+
+  music: {
+    enabled: true,
+    autoplay: true,
+    loop: true,
+    volume: 0.45,
+    marqueePause: 1.5,
+    marqueeWidth: 128,
+    playlist: [
+      {
+        file: "back/music/bez-kryshi-somewhaat.mp3",
+        title: "Без крыши",
+        artist: "somewhaat",
+      },
+      {
+        file: "back/music/liverpool-street-mall-grab.mp3",
+        title: "Liverpool Street In The Rain",
+        artist: "Mall Grab",
+      },
+    ],
+  },
+
+  effects: {
+    type: "sparkles",
+    intensity: 18,
+    color: "#ffffff",
+    targets: [".sparkle-zone"],
+    parallax: true,
+    confetti: true,
+  },
+
+  cursor: {
+    custom: "image/cursor.png",
+    childDrawn: true,
+  },
+
+  footer: {
+    show: false,
+  },
+};
