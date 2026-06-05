@@ -178,7 +178,7 @@
   const profileHtml = `
     <div class="card profile-card tilt-card${glowClass} animate-in">
       ${bannerHtml}
-      <div class="views-badge" id="views-badge" title="уникальные посетители по IP">
+      <div class="views-badge" id="views-badge" title="уникальные IP-адреса">
         ${icon('eye')}
         <span id="views-count">...</span>
       </div>
@@ -249,12 +249,19 @@
 
     const stats = await trackVisit(C.counter);
 
+    const offset = C.counter.offset ?? 0;
+
     if (stats.offline) {
-      countEl.textContent = '—';
-      badge.title = 'Счётчик работает только на хостинге (не file://)';
+      countEl.textContent = offset ? offset.toLocaleString() : '—';
+      badge.title = offset
+        ? `${offset} уникальных IP с fakecrime · живой счётчик только на хостинге`
+        : 'Счётчик уникальных IP работает только на хостинге (не file://)';
     } else {
-      countEl.textContent = stats.unique.toLocaleString();
-      badge.title = `${stats.unique} уникальных IP · ${stats.views} заходов`;
+      const total = stats.unique + offset;
+      countEl.textContent = total.toLocaleString();
+      badge.title = offset
+        ? `${total} уникальных IP · ${offset} fakecrime + ${stats.unique} на этом сайте`
+        : `${stats.unique} уникальных IP`;
     }
   }
 

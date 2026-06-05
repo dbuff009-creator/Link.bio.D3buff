@@ -20,6 +20,8 @@ const CONFIG = {
 
   counter: {
     namespace: "d3buff-live",
+    /* уникальные IP с fakecrime (каждый IP один раз), не число заходов */
+    offset: 222,
   },
 
   fonts: {
