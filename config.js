@@ -7,6 +7,8 @@ const CONFIG = {
     favicon: "image/icon.png",
     titleTypewriter: true,
     typewriterSpeed: 88,
+    /* ↑ увеличь при смене bg.mp4, музыки, аватарки — иначе браузер покажет старый кэш */
+    cacheVersion: 2,
   },
 
   profile: {

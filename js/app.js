@@ -19,8 +19,14 @@
 
   const siteCfg = C.site || {};
 
+  function assetUrl(path) {
+    if (!path || /^https?:\/\//i.test(path) || /^data:/i.test(path)) return path;
+    const v = siteCfg.cacheVersion ?? 1;
+    return `${path}${path.includes('?') ? '&' : '?'}v=${v}`;
+  }
+
   if (siteCfg.favicon) {
-    const href = siteCfg.favicon;
+    const href = assetUrl(siteCfg.favicon);
     const setIcon = (rel) => {
       let link = document.querySelector(`link[rel="${rel}"]`);
       if (!link) {
@@ -87,7 +93,8 @@
   if (C.background.type === 'video' && C.background.video) {
     pattern.style.display = 'none';
     const vid = document.getElementById('bg-video');
-    vid.src = C.background.video;
+    vid.src = assetUrl(C.background.video);
+    vid.load();
     vid.style.display = 'block';
     vid.muted = true;
 
@@ -108,7 +115,7 @@
   } else if (C.background.type === 'image' && C.background.image) {
     pattern.style.display = 'none';
     const img = document.getElementById('bg-image');
-    img.src = C.background.image;
+    img.src = assetUrl(C.background.image);
     img.style.display = 'block';
     if (C.background.blur) img.style.filter = `blur(${C.background.blur}px)`;
   } else if (C.background.type === 'gradient') {
@@ -121,7 +128,7 @@
   const crop = P.avatarCrop || 'center center';
 
   function avatarImg(url, cls) {
-    return `<img class="${cls}" src="${url}" alt="" style="object-position:${crop}" />`;
+    return `<img class="${cls}" src="${assetUrl(url)}" alt="" style="object-position:${crop}" />`;
   }
 
   function avatarBlock(url) {
@@ -162,7 +169,7 @@
     ? `<a class="card link-card tilt-card shine-card animate-in" id="discord-server" href="${serverCfg.invite || '#'}" target="_blank" rel="noopener">
         <div class="link-icon${serverCfg.icon ? ' link-icon-custom' : ''}" id="server-icon">
           ${serverCfg.icon
-            ? `<img class="link-icon-img" src="${serverCfg.icon}" alt="" />`
+            ? `<img class="link-icon-img" src="${assetUrl(serverCfg.icon)}" alt="" />`
             : icon('discord')}
         </div>
         <div class="link-body">
@@ -362,7 +369,7 @@
   function getPlaylist() {
     if (Array.isArray(C.music.playlist) && C.music.playlist.length) {
       return C.music.playlist.map((t) => ({
-        url: encodeURI(t.url || t.file),
+        url: encodeURI(assetUrl(t.url || t.file)),
         title: t.title || '',
         artist: t.artist || '',
       }));

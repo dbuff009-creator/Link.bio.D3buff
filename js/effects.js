@@ -8,9 +8,15 @@ const SiteEffects = (() => {
     document.body.style.cursor = css;
   }
 
+  function assetUrl(path) {
+    if (!path || /^https?:\/\//i.test(path) || /^data:/i.test(path)) return path;
+    const v = (typeof CONFIG !== 'undefined' && CONFIG.site?.cacheVersion) || 1;
+    return `${path}${path.includes('?') ? '&' : '?'}v=${v}`;
+  }
+
   function initCursor(cfg) {
     if (cfg?.custom) {
-      const css = `url(${cfg.custom}) ${CURSOR_HOTSPOT}, auto`;
+      const css = `url(${assetUrl(cfg.custom)}) ${CURSOR_HOTSPOT}, auto`;
       document.documentElement.style.cursor = css;
       document.body.style.cursor = css;
       return;
