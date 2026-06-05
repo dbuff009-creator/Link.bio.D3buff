@@ -49,6 +49,7 @@ const CONFIG = {
   background: {
     type: "video",
     video: "back/bg.mp4",
+    randomStart: true,
     image: "",
     overlay: 0.55,
     blur: 0,

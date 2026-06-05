@@ -90,7 +90,20 @@
     vid.src = C.background.video;
     vid.style.display = 'block';
     vid.muted = true;
-    vid.play().catch(() => {});
+
+    const startBgVideo = () => {
+      if (C.background.randomStart !== false) {
+        const dur = vid.duration;
+        if (dur && isFinite(dur) && dur > 1) {
+          vid.currentTime = Math.random() * dur;
+        }
+      }
+      vid.play().catch(() => {});
+    };
+
+    if (vid.readyState >= 1) startBgVideo();
+    else vid.addEventListener('loadedmetadata', startBgVideo, { once: true });
+
     if (C.background.blur) vid.style.filter = `blur(${C.background.blur}px)`;
   } else if (C.background.type === 'image' && C.background.image) {
     pattern.style.display = 'none';
