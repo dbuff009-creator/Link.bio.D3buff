@@ -112,6 +112,11 @@ const CONFIG = {
         artist: "somewhaat",
       },
       {
+        file: "back/music/vse-hotyat-potselovat-gotlib.mp3",
+        title: "все хотят меня поцеловать",
+        artist: "gotlibgotlibgotlib",
+      },
+      {
         file: "back/music/liverpool-street-mall-grab.mp3",
         title: "Liverpool Street In The Rain",
         artist: "Mall Grab",
