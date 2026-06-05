@@ -36,8 +36,8 @@ const SiteEffects = (() => {
   }
 
   const CONFETTI_COLORS = [
-    '#ffffff', '#fff59d', '#ff6b9d', '#55ccff', '#7bed9f',
-    '#ffa502', '#e056fd', '#dcdcdc', '#ff4757', '#70a1ff',
+    '#ffffff', '#f5f5f5', '#e5e5e5', '#d4d4d4', '#a3a3a3',
+    '#737373', '#525252', '#262626', '#171717', '#000000',
   ];
   const CONFETTI_SHAPES = ['rect', 'ribbon', 'triangle', 'shard'];
 
