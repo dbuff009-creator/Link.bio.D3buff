@@ -359,9 +359,15 @@
     initTypewriterTitle();
   }
 
-  function initEnterText(text) {
+  function initEnterScreen(text) {
     const el = document.getElementById('enter-text');
+    const emojiEl = document.getElementById('enter-emoji');
     if (!el) return;
+
+    const charStart = 0.05;
+    const charStep = 0.018;
+    const charDur = 0.24;
+    const len = text.length;
 
     el.textContent = '';
     el.setAttribute('aria-label', text);
@@ -370,9 +376,12 @@
       const span = document.createElement('span');
       span.className = 'enter-char';
       span.textContent = char === ' ' ? '\u00a0' : char;
-      span.style.setProperty('--enter-delay', `${0.34 + i * 0.038}s`);
+      span.style.setProperty('--enter-delay', `${charStart + i * charStep}s`);
       el.appendChild(span);
     });
+
+    const textMid = charStart + ((Math.max(len - 1, 0) * charStep + charDur) / 2);
+    if (emojiEl) emojiEl.style.setProperty('--emoji-delay', `${textMid}s`);
   }
 
   if (C.enter.enabled) {
@@ -381,7 +390,7 @@
     if (emojiEl && emojiUrl) emojiEl.src = assetUrl(emojiUrl);
     else emojiEl?.remove();
 
-    initEnterText(C.enter.text || 'Tap to continue');
+    initEnterScreen(C.enter.text || 'Tap to continue');
     const sub = document.getElementById('enter-sub');
     if (sub && C.enter.subtext) sub.textContent = C.enter.subtext;
     else sub?.remove();
