@@ -183,6 +183,9 @@
     vk: 'VK',
     spotify: 'Spotify',
     twitch: 'Twitch',
+    namemc: 'NameMC',
+    roblox: 'Roblox',
+    roblox2: 'Roblox',
   };
 
   const bannerCfg = C.banner || {};

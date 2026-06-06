@@ -710,6 +710,13 @@ html, body {
   color: var(--icon-on-accent);
 }
 
+.social-btn .ico-img {
+  width: 20px;
+  height: 20px;
+  display: block;
+  object-fit: contain;
+}
+
 /* ─── DISCORD (внизу, как fakecrime) ─── */
 .discord-status-card {
   display: flex;

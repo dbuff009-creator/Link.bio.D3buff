@@ -8,7 +8,7 @@ const CONFIG = {
     titleTypewriter: true,
     typewriterSpeed: 88,
     /* ↑ увеличь при смене bg.mp4, музыки, аватарки — иначе браузер покажет старый кэш */
-    cacheVersion: 3,
+    cacheVersion: 4,
   },
 
   profile: {
@@ -68,6 +68,10 @@ const CONFIG = {
   social: [
     { id: "telegram", url: "https://t.me/TheD3buff", label: "Tg channel" },
     { id: "discord", url: "https://discord.com/users/976212073790980117/", label: "Discord" },
+    { id: "namemc", url: "https://namemc.com/profile/goofy_D3buff", label: "NameMC" },
+    { id: "youtube", url: "https://www.youtube.com/@D3BUFF-k6j", label: "YouTube" },
+    { id: "roblox", url: "https://www.roblox.com/users/2335154582/profile", label: "Roblox · 1 акк" },
+    { id: "roblox2", url: "https://www.roblox.com/users/4577228859/profile", label: "Roblox · 2 акк" },
   ],
 
   links: [

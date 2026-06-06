@@ -1,4 +1,10 @@
-/* Font Awesome 6 — CDN в index.html */
+/* Font Awesome 6 — CDN в index.html; бренды без FA — IMG_ICONS (Simple Icons CDN) */
+
+const IMG_ICONS = {
+  namemc: 'https://cdn.simpleicons.org/namemc/0a0a0a',
+  roblox: 'https://cdn.simpleicons.org/roblox/0a0a0a',
+  roblox2: 'https://cdn.simpleicons.org/roblox/0a0a0a',
+};
 
 const BRAND_ICONS = {
   discord: 'fa-brands fa-discord',
@@ -39,6 +45,10 @@ const UI_ICONS = {
 };
 
 function icon(name) {
+  const img = IMG_ICONS[name];
+  if (img) {
+    return `<img class="ico ico-img" src="${img}" alt="" width="20" height="20" loading="lazy" decoding="async" />`;
+  }
   const brand = BRAND_ICONS[name];
   if (brand) return `<i class="${brand} ico ico-brand" aria-hidden="true"></i>`;
   const ui = UI_ICONS[name] || UI_ICONS.link;
