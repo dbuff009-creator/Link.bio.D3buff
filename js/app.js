@@ -106,6 +106,7 @@
       if (bgVideoReady) return;
       loader?.classList.add('is-active');
       loader?.classList.remove('is-hidden');
+      loader?.setAttribute('aria-hidden', 'false');
       vid.classList.add('is-loading');
     };
 
@@ -113,8 +114,9 @@
       if (bgVideoReady) return;
       bgVideoReady = true;
       loader?.classList.add('is-hidden');
+      loader?.setAttribute('aria-hidden', 'true');
       vid.classList.remove('is-loading');
-      setTimeout(() => loader?.classList.remove('is-active'), 560);
+      setTimeout(() => loader?.classList.remove('is-active'), 480);
     };
 
     showVideoLoader();
@@ -344,7 +346,14 @@
     setTimeout(step, 280);
   }
 
-  function enter() {
+  let hasEntered = false;
+
+  function enter(e) {
+    if (hasEntered) return;
+    hasEntered = true;
+    e?.preventDefault();
+    e?.stopPropagation();
+
     const vid = document.getElementById('bg-video');
     if (vid && vid.style.display !== 'none') vid.play().catch(() => {});
 
@@ -352,11 +361,14 @@
     page.classList.add('visible');
     startMusic();
     initEffects();
-    initSiteEffects();
     updateStats();
     loadDiscordServer();
     loadBanner();
     initTypewriterTitle();
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => initSiteEffects());
+    });
   }
 
   function initEnterScreen(text) {
@@ -397,7 +409,7 @@
 
     enterScreen.style.display = 'flex';
     page.style.display = 'flex';
-    enterScreen.addEventListener('click', enter);
+    enterScreen.addEventListener('click', enter, { once: true });
   } else {
     enterScreen.style.display = 'none';
     page.classList.add('visible');
