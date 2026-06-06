@@ -8,7 +8,7 @@ const CONFIG = {
     titleTypewriter: true,
     typewriterSpeed: 88,
     /* ↑ увеличь при смене bg.mp4, музыки, аватарки — иначе браузер покажет старый кэш */
-    cacheVersion: 2,
+    cacheVersion: 3,
   },
 
   profile: {
@@ -60,7 +60,9 @@ const CONFIG = {
   },
 
   enter: {
-    enabled: false,
+    enabled: true,
+    text: "Tap to continue",
+    emoji: "image/fun.jpg",
   },
 
   social: [
