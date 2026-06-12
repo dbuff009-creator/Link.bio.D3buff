@@ -45,7 +45,7 @@ const CONFIG = {
 
   banner: {
     enabled: true,
-    image: "https://r2.fakecrime.bio/banners/6980d32e-63ab-4a15-9109-d5f67ee81da4.png",
+    image: "https://i.imgur.com/hpCyi8J.png",
   },
 
   background: {
