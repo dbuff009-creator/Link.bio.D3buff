@@ -231,15 +231,10 @@ const SiteEffects = (() => {
     }
   }
 
-  let confettiBound = false;
-
   function initConfetti(enabled) {
-    if (!enabled || confettiBound) return;
-    confettiBound = true;
-
+    if (!enabled) return;
     document.addEventListener('click', (e) => {
-      if (e.target.closest('#enter-screen, a, button, input, label, .music-bar, .music-dock, .music-mini, #bg-video-loader, #confetti-canvas')) return;
-      if (!e.isTrusted) return;
+      if (e.target.closest('a, button, input, .music-bar, .music-dock, .music-mini')) return;
       burstConfetti(e.clientX, e.clientY);
     });
   }

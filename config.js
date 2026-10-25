@@ -8,12 +8,12 @@ const CONFIG = {
     titleTypewriter: true,
     typewriterSpeed: 88,
     /* ↑ увеличь при смене bg.mp4, музыки, аватарки — иначе браузер покажет старый кэш */
-    cacheVersion: 4,
+    cacheVersion: 2,
   },
 
   profile: {
     displayName: "D3buff",
-    avatar: "image/avatar.jpg",
+    avatar: "image/avatar.png",
     avatarCrop: "center 72%",
     tags: ["Graphic designer", "Furry", "Gmod player"],
     pronouns: "He || his",
@@ -45,7 +45,7 @@ const CONFIG = {
 
   banner: {
     enabled: true,
-    image: "https://r2.fakecrime.bio/banners/6980d32e-63ab-4a15-9109-d5f67ee81da4.png",
+    image: "https://i.imgur.com/UE7hr92.png",
   },
 
   background: {
@@ -53,25 +53,19 @@ const CONFIG = {
     video: "back/bg.mp4",
     randomStart: true,
     image: "",
-    overlay: 0.55,
+    overlay: 0.1,
     blur: 0,
     dimColor: "rgba(0,0,0,0.4)",
     vignette: false,
   },
 
   enter: {
-    enabled: true,
-    text: "Tap to continue",
-    emoji: "image/fun.jpg",
+    enabled: false,
   },
 
   social: [
     { id: "telegram", url: "https://t.me/TheD3buff", label: "Tg channel" },
     { id: "discord", url: "https://discord.com/users/976212073790980117/", label: "Discord" },
-    { id: "namemc", url: "https://namemc.com/profile/goofy_D3buff", label: "NameMC" },
-    { id: "youtube", url: "https://www.youtube.com/@D3BUFF-k6j", label: "YouTube" },
-    { id: "roblox", url: "https://www.roblox.com/users/2335154582/profile", label: "Roblox · 1 акк" },
-    { id: "roblox2", url: "https://www.roblox.com/users/4577228859/profile", label: "Roblox · 2 акк" },
   ],
 
   links: [
@@ -111,24 +105,24 @@ const CONFIG = {
     enabled: true,
     autoplay: true,
     loop: true,
-    volume: 0.2,
+    volume: 0.45,
     marqueePause: 1.5,
     marqueeWidth: 128,
     playlist: [
       {
-        file: "back/music/bez-kryshi-somewhaat.mp3",
-        title: "Без крыши",
-        artist: "somewhaat",
+        file: "back/music/sorry.mp3",
+        title: "> ,< + sorry",
+        artist: "sheqate",
       },
       {
-        file: "back/music/vse-hotyat-potselovat-gotlib.mp3",
-        title: "все хотят меня поцеловать",
-        artist: "gotlibgotlibgotlib",
+        file: "back/music/suture.mp3",
+        title: "suture",
+        artist: "Sink Saiko",
       },
       {
-        file: "back/music/liverpool-street-mall-grab.mp3",
-        title: "Liverpool Street In The Rain",
-        artist: "Mall Grab",
+        file: "back/music/hardwick.mp3",
+        title: "7MANN",
+        artist: "HARDWICK",
       },
     ],
   },

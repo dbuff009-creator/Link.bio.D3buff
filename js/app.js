@@ -93,33 +93,10 @@
   if (C.background.type === 'video' && C.background.video) {
     pattern.style.display = 'none';
     const vid = document.getElementById('bg-video');
-    const loader = document.getElementById('bg-video-loader');
     vid.src = assetUrl(C.background.video);
     vid.load();
     vid.style.display = 'block';
     vid.muted = true;
-    vid.classList.add('is-loading');
-
-    let bgVideoReady = false;
-
-    const showVideoLoader = () => {
-      if (bgVideoReady) return;
-      loader?.classList.add('is-active');
-      loader?.classList.remove('is-hidden');
-      loader?.setAttribute('aria-hidden', 'false');
-      vid.classList.add('is-loading');
-    };
-
-    const hideVideoLoader = () => {
-      if (bgVideoReady) return;
-      bgVideoReady = true;
-      loader?.classList.add('is-hidden');
-      loader?.setAttribute('aria-hidden', 'true');
-      vid.classList.remove('is-loading');
-      setTimeout(() => loader?.classList.remove('is-active'), 480);
-    };
-
-    showVideoLoader();
 
     const startBgVideo = () => {
       if (C.background.randomStart !== false) {
@@ -131,16 +108,7 @@
       vid.play().catch(() => {});
     };
 
-    const onVideoReady = () => hideVideoLoader();
-
-    vid.addEventListener('loadeddata', onVideoReady, { once: true });
-    vid.addEventListener('playing', onVideoReady);
-    vid.addEventListener('waiting', () => {
-      if (vid.readyState < 3) showVideoLoader();
-    });
-    vid.addEventListener('error', () => showVideoLoader());
-
-    if (vid.readyState >= 2) startBgVideo();
+    if (vid.readyState >= 1) startBgVideo();
     else vid.addEventListener('loadedmetadata', startBgVideo, { once: true });
 
     if (C.background.blur) vid.style.filter = `blur(${C.background.blur}px)`;
@@ -183,9 +151,6 @@
     vk: 'VK',
     spotify: 'Spotify',
     twitch: 'Twitch',
-    namemc: 'NameMC',
-    roblox: 'Roblox',
-    roblox2: 'Roblox',
   };
 
   const bannerCfg = C.banner || {};
@@ -323,6 +288,7 @@
   /* ─── ENTER ─── */
   const enterScreen = document.getElementById('enter-screen');
   const page = document.getElementById('page');
+  const enterAvatar = document.getElementById('enter-avatar-wrap');
 
   function initTypewriterTitle() {
     const text = siteCfg.tabTitle || P.displayName;
@@ -349,70 +315,29 @@
     setTimeout(step, 280);
   }
 
-  let hasEntered = false;
-
-  function enter(e) {
-    if (hasEntered) return;
-    hasEntered = true;
-    e?.preventDefault();
-    e?.stopPropagation();
-
-    const vid = document.getElementById('bg-video');
-    if (vid && vid.style.display !== 'none') vid.play().catch(() => {});
-
+  function enter() {
     enterScreen.classList.add('hidden');
     page.classList.add('visible');
     startMusic();
     initEffects();
+    initSiteEffects();
     updateStats();
     loadDiscordServer();
     loadBanner();
     initTypewriterTitle();
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => initSiteEffects());
-    });
-  }
-
-  function initEnterScreen(text) {
-    const el = document.getElementById('enter-text');
-    const emojiEl = document.getElementById('enter-emoji');
-    if (!el) return;
-
-    const charStart = 0.05;
-    const charStep = 0.018;
-    const charDur = 0.24;
-    const len = text.length;
-
-    el.textContent = '';
-    el.setAttribute('aria-label', text);
-
-    [...text].forEach((char, i) => {
-      const span = document.createElement('span');
-      span.className = 'enter-char';
-      span.textContent = char === ' ' ? '\u00a0' : char;
-      span.style.setProperty('--enter-delay', `${charStart + i * charStep}s`);
-      el.appendChild(span);
-    });
-
-    const textMid = charStart + ((Math.max(len - 1, 0) * charStep + charDur) / 2);
-    if (emojiEl) emojiEl.style.setProperty('--emoji-delay', `${textMid}s`);
   }
 
   if (C.enter.enabled) {
-    const emojiEl = document.getElementById('enter-emoji');
-    const emojiUrl = C.enter.emoji || C.enter.avatar || P.avatar;
-    if (emojiEl && emojiUrl) emojiEl.src = assetUrl(emojiUrl);
-    else emojiEl?.remove();
-
-    initEnterScreen(C.enter.text || 'Tap to continue');
+    const avUrl = C.enter.avatar || P.avatar;
+    enterAvatar.innerHTML = avUrl
+      ? avatarImg(avUrl, 'enter-avatar')
+      : `<div class="enter-avatar-placeholder">${P.displayName[0]?.toUpperCase() || '?'}</div>`;
+    document.getElementById('enter-text').textContent = C.enter.text;
     const sub = document.getElementById('enter-sub');
     if (sub && C.enter.subtext) sub.textContent = C.enter.subtext;
-    else sub?.remove();
-
     enterScreen.style.display = 'flex';
     page.style.display = 'flex';
-    enterScreen.addEventListener('click', enter, { once: true });
+    enterScreen.addEventListener('click', enter);
   } else {
     enterScreen.style.display = 'none';
     page.classList.add('visible');
