@@ -105,7 +105,7 @@ const CONFIG = {
     enabled: true,
     autoplay: true,
     loop: true,
-    volume: 0.45,
+    volume: 0.2,
     marqueePause: 1.5,
     marqueeWidth: 128,
     playlist: [
