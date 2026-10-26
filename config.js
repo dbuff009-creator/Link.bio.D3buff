@@ -1,19 +1,27 @@
 /* ═══════════════════════════════════════════════════════════════
-   НАСТРОЙКА — меняй только этот файл
+   НАСТРОЙКА САЙТА
+   Картинки указываются БЕЗ расширения: image/bg, image/avatar…
+   Можно заменить PNG на JPG / JPEG / WEBP, не меняя этот файл.
+   Оставляй один актуальный вариант картинки с нужным именем.
    ═══════════════════════════════════════════════════════════════ */
 
 const CONFIG = {
   site: {
-    favicon: "image/icon.png",
+    favicon: "image/icon",
     titleTypewriter: true,
     typewriterSpeed: 88,
-    /* ↑ увеличь при смене bg.mp4, музыки, аватарки — иначе браузер покажет старый кэш */
-    cacheVersion: 2,
+    /* Увеличь число, если заменил картинку или музыку, а браузер хранит старый файл. */
+    cacheVersion: 13,
   },
 
   profile: {
-    displayName: "D3buff",
-    avatar: "image/avatar.png",
+    displayName: "D3buff", // имя вкладки и alt логотипа
+    logo: "image/logo",
+    logoWidth: 300,       // большой логотип вместо аватарки и видимого ника
+    logoAxisX: 48.84,     // оптическая ось меча в исходном PNG, в процентах ширины
+    logoOffsetX: -2,      // основное лого сдвинуто на 2px влево
+    logoOffsetY: 24,      // ниже центральной линии баннера
+    avatar: "image/avatar",
     avatarCrop: "center 72%",
     tags: ["Graphic designer", "Furry", "Gmod player"],
     pronouns: "He || his",
@@ -33,22 +41,25 @@ const CONFIG = {
   },
 
   theme: {
-    accent: "#ffffff",
-    accentHover: "#e5e5e5",
-    text: "#ffffff",
-    textMuted: "#a3a3a3",
-    cardBg: "rgba(8, 8, 10, 0.72)",
-    cardBorder: "rgba(255, 255, 255, 0.06)",
+    season: "winter",
+    accent: "#cceaff",
+    accentHover: "#e4f4ff",
+    text: "#f2f7ff",
+    textMuted: "#adbfce",
+    cardBg: "rgba(11, 23, 38, 0.78)",
+    cardBorder: "rgba(195, 225, 255, 0.18)",
     cardRadius: 30,
-    glow: false,
+    glow: true,
   },
 
   banner: {
     enabled: true,
-    image: "https://i.imgur.com/UE7hr92.png",
+    /* Обложка профиля: image/bg.png, image/bg.jpg или image/bg.jpeg. */
+    image: "image/bg",
   },
 
   background: {
+    /* Исходный видеофон. Замена обложки image/bg.* его не затрагивает. */
     type: "video",
     video: "back/bg.mp4",
     randomStart: true,
@@ -59,8 +70,19 @@ const CONFIG = {
     vignette: false,
   },
 
+  ornaments: {
+    enabled: true,
+    /* Боковые орнаменты инвертируют цвета под собой (mix-blend-mode: difference), как логотип. */
+    image: "image/ornament",
+    opacity: 1,
+    flipHorizontal: true, // левый отражён, правый в исходной ориентации
+  },
+
   enter: {
-    enabled: false,
+    /* Заставка с большим лого; звук разрешается настоящим жестом пользователя. */
+    enabled: true,
+    text: "Click to continue",
+    subtext: "",
   },
 
   social: [
@@ -96,7 +118,7 @@ const CONFIG = {
     guildId: "1257766638883705006",
     name: "FRND Squad!",
     tag: "FRND squad",
-    icon: "image/Server.png",
+    icon: "image/Server",
     description: "Это сообщество друзей без сорр и оскорблений",
     invite: "https://discord.gg/em6GrsH933",
   },
@@ -128,16 +150,12 @@ const CONFIG = {
   },
 
   effects: {
-    type: "sparkles",
-    intensity: 18,
-    color: "#ffffff",
-    targets: [".sparkle-zone"],
+    type: "none",       // снега и других фоновых эффектов нет
     parallax: true,
-    confetti: true,
   },
 
   cursor: {
-    custom: "image/cursor.png",
+    custom: "image/cursor",
     childDrawn: true,
   },
 

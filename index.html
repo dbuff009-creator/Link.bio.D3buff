@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="theme-color" content="#0b1726" />
   <title>D3buff</title>
-  <link rel="icon" type="image/png" href="image/icon.png" />
-  <link rel="apple-touch-icon" href="image/icon.png" />
+  <link rel="icon" />
+  <link rel="apple-touch-icon" />
   <link rel="stylesheet" href="css/fonts.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="css/style.css?v=53" />
+  <link rel="stylesheet" href="css/style.css?v=64" />
 </head>
-<body>
+<body class="awaiting-entry">
 
   <div id="bg">
     <div id="bg-pattern"></div>
@@ -23,20 +23,23 @@
     <div id="bg-overlay"></div>
   </div>
 
-  <canvas id="fx-canvas"></canvas>
-
-  <div id="enter-screen" style="display:none">
-    <div class="enter-glow"></div>
-    <div id="enter-avatar-wrap"></div>
-    <p class="enter-text" id="enter-text">Click to enter</p>
-    <p class="enter-sub" id="enter-sub"></p>
+  <div id="page-ornaments" aria-hidden="true" hidden>
+    <img class="page-ornament page-ornament-left" alt="" draggable="false" />
+    <img class="page-ornament page-ornament-right" alt="" draggable="false" />
   </div>
 
-  <main id="page">
+  <div id="enter-screen" style="display:none" aria-label="Click to continue">
+    <div class="entry-content">
+      <div class="entry-logo-wrap"><img id="entry-logo" alt="" draggable="false" /></div>
+      <button class="entry-continue" id="enter-button" type="button">Click to continue</button>
+    </div>
+  </div>
+
+  <main id="page" inert aria-hidden="true">
     <div class="container" id="container"></div>
   </main>
 
-  <div id="music-dock" class="music-dock">
+  <div id="music-dock" class="music-dock" inert aria-hidden="true">
     <button class="music-dock-collapse" id="music-close" type="button" aria-label="Свернуть плеер"></button>
     <div class="music-dock-shell" id="music-dock-shell">
       <button class="music-mini" id="music-mini" type="button" aria-label="Открыть плеер">
@@ -80,10 +83,11 @@
 
   <div id="footer"></div>
 
-  <script src="config.js?v=53"></script>
-  <script src="js/icons.js?v=53"></script>
-  <script src="js/stats.js?v=53"></script>
-  <script src="js/effects.js?v=53"></script>
-  <script src="js/app.js?v=53"></script>
+  <script src="config.js?v=61"></script>
+  <script src="js/assets.js?v=61"></script>
+  <script src="js/icons.js?v=61"></script>
+  <script src="js/stats.js?v=61"></script>
+  <script src="js/effects.js?v=61"></script>
+  <script src="js/app.js?v=61"></script>
 </body>
 </html>

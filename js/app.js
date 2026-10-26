@@ -1,10 +1,11 @@
-(function () {
-  const C = CONFIG;
+(async function () {
+  const C = await SiteAssets.prepare(CONFIG);
   const P = C.profile;
   const T = C.theme;
   const F = C.fonts || { body: 'Inter', display: 'Humane', name: 'MangoGrotesque' };
 
   const root = document.documentElement;
+  root.dataset.season = T.season || 'default';
   root.style.setProperty('--accent', T.accent);
   root.style.setProperty('--accent-hover', T.accentHover);
   root.style.setProperty('--accent-glow', hexToRgba(T.accent, 0.38));
@@ -20,9 +21,7 @@
   const siteCfg = C.site || {};
 
   function assetUrl(path) {
-    if (!path || /^https?:\/\//i.test(path) || /^data:/i.test(path)) return path;
-    const v = siteCfg.cacheVersion ?? 1;
-    return `${path}${path.includes('?') ? '&' : '?'}v=${v}`;
+    return SiteAssets.url(path);
   }
 
   if (siteCfg.favicon) {
@@ -35,10 +34,26 @@
         document.head.appendChild(link);
       }
       link.href = href;
-      if (rel === 'icon') link.type = 'image/png';
+      const type = SiteAssets.imageType(siteCfg.favicon);
+      if (type) link.type = type;
+      else link.removeAttribute('type');
     };
     setIcon('icon');
     setIcon('apple-touch-icon');
+  }
+
+  /* Один локальный орнамент, две стороны — отражение задаётся в CSS. */
+  const ornamentLayer = document.getElementById('page-ornaments');
+  const ornamentCfg = C.ornaments || {};
+  if (ornamentLayer && ornamentCfg.enabled !== false && ornamentCfg.image) {
+    const opacity = Number(ornamentCfg.opacity ?? 0.72);
+    ornamentLayer.style.setProperty('--ornament-opacity',
+      Number.isFinite(opacity) ? Math.max(0, Math.min(1, opacity)) : 0.72);
+    ornamentLayer.classList.toggle('is-reversed', ornamentCfg.flipHorizontal === true);
+    ornamentLayer.querySelectorAll('img').forEach(image => {
+      image.src = assetUrl(ornamentCfg.image);
+    });
+    ornamentLayer.hidden = false;
   }
 
   SiteEffects.initCursor(C.cursor);
@@ -56,7 +71,6 @@
     if (dockAnimTimer) clearTimeout(dockAnimTimer);
 
     if (open) {
-      SiteEffects.tossFloorConfetti();
       syncShellWidth();
       dock.classList.remove('is-closing');
       dock.classList.add('is-opening');
@@ -158,7 +172,7 @@
   const bannerHtml = showBanner
     ? `<div class="profile-banner${bannerCfg.image ? ' has-image' : ''}">
         ${bannerCfg.image
-          ? `<img class="profile-banner-img" src="${bannerCfg.image}" alt="" />`
+          ? `<img class="profile-banner-img" src="${assetUrl(bannerCfg.image)}" alt="" />`
           : '<div class="profile-banner-bg"></div>'}
       </div>`
     : '';
@@ -194,9 +208,25 @@
     : '';
 
   const glowClass = T.glow ? ' glow' : '';
+  const hasProfileLogo = Boolean(P.logo);
+  const logoWidth = Math.max(100, Math.min(560, Number(P.logoWidth) || 300));
+  root.style.setProperty('--profile-logo-width', `${logoWidth}px`);
+  const configuredAxis = Number(P.logoAxisX ?? 50);
+  const logoAxisX = Number.isFinite(configuredAxis) ? Math.max(0, Math.min(100, configuredAxis)) : 50;
+  root.style.setProperty('--profile-logo-axis-x', `${logoAxisX}%`);
+  const logoOffsetX = Math.max(-60, Math.min(60, Number(P.logoOffsetX) || 0));
+  const logoOffsetY = Math.max(-60, Math.min(60, Number(P.logoOffsetY) || 0));
+  root.style.setProperty('--profile-logo-offset-x', `${logoOffsetX}px`);
+  root.style.setProperty('--profile-logo-offset-y', `${logoOffsetY}px`);
+  const profileLogoHtml = hasProfileLogo
+    ? `<div class="profile-logo-wrap"><img class="profile-logo" src="${assetUrl(P.logo)}" alt="${escapeHtml(P.displayName)}" draggable="false" /></div>`
+    : '';
+  const profileBranding = hasProfileLogo
+    ? '<div class="profile-logo-spacer" aria-hidden="true"></div>'
+    : `${avatarBlock(P.avatar)}<div class="sparkle-zone"><div class="display-name">${escapeHtml(P.displayName)}</div></div>`;
 
   const profileHtml = `
-    <div class="card profile-card tilt-card${glowClass} animate-in">
+    <div class="card profile-card tilt-card${hasProfileLogo ? ' has-profile-logo' : ''}${showBanner ? ' has-profile-banner' : ''}${glowClass} animate-in">
       ${bannerHtml}
       <div class="views-badge" id="views-badge" title="уникальные IP-адреса">
         ${icon('eye')}
@@ -204,10 +234,7 @@
       </div>
       <div class="profile-body">
         <div class="profile-center">
-          ${avatarBlock(P.avatar)}
-          <div class="sparkle-zone">
-            <div class="display-name">${escapeHtml(P.displayName)}</div>
-          </div>
+          ${profileBranding}
           ${P.tags.length ? `<div class="tags">${P.tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>` : ''}
           ${P.pronouns ? `<span class="pronouns">${escapeHtml(P.pronouns)}</span>` : ''}
           ${P.location ? `<div class="location">${icon('pin')}<span>${escapeHtml(P.location)}</span></div>` : ''}
@@ -217,6 +244,7 @@
           }).join('')}</div>` : ''}
         </div>
       </div>
+      ${profileLogoHtml}
     </div>`;
 
   const linksHtml = C.links.map(l => `
@@ -230,6 +258,16 @@
     </a>`).join('');
 
   container.innerHTML = profileHtml + linksHtml + serverCard + portfolioCard;
+  const profileLogo = container.querySelector('.profile-logo');
+  if (profileLogo) {
+    const updateLogoRatio = () => {
+      if (profileLogo.naturalWidth && profileLogo.naturalHeight) {
+        root.style.setProperty('--profile-logo-ratio', `${profileLogo.naturalWidth} / ${profileLogo.naturalHeight}`);
+      }
+    };
+    profileLogo.addEventListener('load', updateLogoRatio);
+    if (profileLogo.complete) updateLogoRatio();
+  }
 
   const musicDock = document.getElementById('music-dock');
   if (C.music.enabled && getPlaylist().length) {
@@ -288,7 +326,9 @@
   /* ─── ENTER ─── */
   const enterScreen = document.getElementById('enter-screen');
   const page = document.getElementById('page');
-  const enterAvatar = document.getElementById('enter-avatar-wrap');
+  const enterButton = document.getElementById('enter-button');
+  const entryLogo = document.getElementById('entry-logo');
+  let entered = false;
 
   function initTypewriterTitle() {
     const text = siteCfg.tabTitle || P.displayName;
@@ -315,32 +355,58 @@
     setTimeout(step, 280);
   }
 
-  function enter() {
+  function revealPage() {
+    document.body.classList.remove('awaiting-entry');
+    root.dataset.entered = 'true';
     enterScreen.classList.add('hidden');
+    enterScreen.setAttribute('aria-hidden', 'true');
+    enterScreen.inert = true;
+    page.inert = false;
+    page.removeAttribute('aria-hidden');
     page.classList.add('visible');
-    startMusic();
-    initEffects();
+    if (musicDock) {
+      musicDock.inert = false;
+      musicDock.removeAttribute('aria-hidden');
+    }
+  }
+
+  function enter() {
+    if (entered) return;
+    entered = true;
+    enterButton.disabled = true;
+    // Старт аудио — синхронно внутри настоящего клика/клавиатурного жеста.
+    startMusic(true);
+    revealPage();
     initSiteEffects();
     updateStats();
     loadDiscordServer();
     loadBanner();
     initTypewriterTitle();
+    window.setTimeout(() => { enterScreen.style.display = 'none'; }, 320);
   }
 
   if (C.enter.enabled) {
-    const avUrl = C.enter.avatar || P.avatar;
-    enterAvatar.innerHTML = avUrl
-      ? avatarImg(avUrl, 'enter-avatar')
-      : `<div class="enter-avatar-placeholder">${P.displayName[0]?.toUpperCase() || '?'}</div>`;
-    document.getElementById('enter-text').textContent = C.enter.text;
-    const sub = document.getElementById('enter-sub');
-    if (sub && C.enter.subtext) sub.textContent = C.enter.subtext;
+    // До клика видны только спокойное лого и короткая надпись.
+    entryLogo.src = assetUrl(P.logo || 'image/logo');
+    enterButton.textContent = C.enter.text || 'Click to continue';
+    enterScreen.setAttribute('aria-label', enterButton.textContent);
+    enterScreen.setAttribute('role', 'dialog');
+    enterScreen.setAttribute('aria-modal', 'true');
+    enterScreen.tabIndex = -1;
     enterScreen.style.display = 'flex';
     page.style.display = 'flex';
-    enterScreen.addEventListener('click', enter);
+    enterButton.addEventListener('click', enter, { once: true });
+    enterScreen.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        enter();
+      }
+    });
+    enterScreen.focus({ preventScroll: true });
   } else {
     enterScreen.style.display = 'none';
-    page.classList.add('visible');
+    entered = true;
+    revealPage();
     page.style.display = 'flex';
   }
 
@@ -362,7 +428,6 @@
 
   function initSiteEffects() {
     SiteEffects.initParallax(C.effects?.parallax !== false);
-    SiteEffects.initConfetti(C.effects?.confetti !== false);
   }
 
   /* ─── MUSIC ─── */
@@ -613,7 +678,7 @@
       });
   }
 
-  function startMusic() {
+  function startMusic(fromEntryGesture = false) {
     if (!C.music.enabled || !getPlaylist().length) return;
     const audio = document.getElementById('audio');
     const toggle = document.getElementById('music-toggle');
@@ -629,6 +694,7 @@
 
     audio.volume = C.music.volume ?? 0.45;
     musicViz = SiteEffects.initVisualizer(audio, vizEl);
+    musicViz?.setup();
 
     miniBtn?.addEventListener('click', () => {
       window.toggleMusicDock(true);
@@ -660,7 +726,7 @@
       if (IS_FILE_PROTOCOL) showMusicFileHint('load');
     });
 
-    if (C.music.autoplay) tryPlayMusic(audio);
+    if (fromEntryGesture || C.music.autoplay) tryPlayMusic(audio);
 
     document.addEventListener('pointerdown', () => {
       if (!musicNeedsGesture || audio.paused !== true) return;
@@ -857,102 +923,6 @@
       .catch(() => setDiscordStatus('offline', statusLabels.offline));
   }
 
-  /* ─── EFFECTS ─── */
-  function initEffects() {
-    if (!C.effects || C.effects.type === 'none') return;
-
-    const canvas = document.getElementById('fx-canvas');
-    if (C.effects.type === 'sparkles') initTextSparkles();
-    if (C.effects.type !== 'particles' || !canvas) return;
-    const ctx = canvas.getContext('2d');
-    const particles = [];
-    const count = Math.floor((C.effects.intensity || 30) * 1.2);
-
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
-    for (let i = 0; i < count; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        s: 0.5 + Math.random() * 2,
-        a: Math.random() * Math.PI * 2,
-      });
-    }
-
-    function loop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = C.effects.color || 'rgba(255,255,255,0.6)';
-
-      for (const p of particles) {
-        ctx.globalAlpha = 0.15 + Math.random() * 0.35;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2);
-        ctx.fill();
-        p.x += Math.cos(p.a) * 0.2;
-        p.y += Math.sin(p.a) * 0.2;
-        if (p.x < 0 || p.x > canvas.width) p.a = Math.PI - p.a;
-        if (p.y < 0 || p.y > canvas.height) p.a = -p.a;
-      }
-      ctx.globalAlpha = 1;
-      requestAnimationFrame(loop);
-    }
-    loop();
-  }
-
-  function randomSparklePoint() {
-    const x = -12 + Math.random() * 124;
-    const y = 36 + Math.random() * 32;
-    const driftStart = (Math.random() - 0.5) * 8;
-    const driftEnd = driftStart + (Math.random() - 0.5) * 26;
-    const rise = 16 + Math.random() * 26;
-
-    return { x, y, driftStart, driftEnd, rise };
-  }
-
-  function applySparklePoint(sp, point) {
-    sp.style.left = `${point.x}%`;
-    sp.style.top = `${point.y}%`;
-    sp.style.setProperty('--sparkle-drift-start', `${point.driftStart}px`);
-    sp.style.setProperty('--sparkle-drift-end', `${point.driftEnd}px`);
-    sp.style.setProperty('--sparkle-rise', `${point.rise}px`);
-  }
-
-  function initTextSparkles() {
-    const fx = C.effects;
-    const selectors = fx.targets || ['.sparkle-zone'];
-    const sparkleColor = fx.color || '#ffffff';
-    const count = Math.max(4, Math.floor((fx.intensity || 18) / 4));
-
-    selectors.forEach(sel => {
-      document.querySelectorAll(sel).forEach(zone => {
-        if (zone.dataset.sparkles) return;
-        zone.dataset.sparkles = '1';
-        zone.classList.add('sparkle-host');
-
-        for (let i = 0; i < count; i++) {
-          const sp = document.createElement('span');
-          sp.className = 'text-sparkle';
-          sp.textContent = '✦';
-          sp.style.color = sparkleColor;
-          sp.style.setProperty('--sparkle-dur', `${2.1 + Math.random() * 1.4}s`);
-          sp.style.setProperty('--sparkle-delay', `${Math.random() * 2.5}s`);
-
-          applySparklePoint(sp, randomSparklePoint());
-          sp.addEventListener('animationiteration', () => {
-            applySparklePoint(sp, randomSparklePoint());
-          });
-
-          zone.appendChild(sp);
-        }
-      });
-    });
-  }
-
   function escapeHtml(s) {
     const d = document.createElement('div');
     d.textContent = s;
@@ -967,9 +937,10 @@
     return `rgba(${r},${g},${b},${a})`;
   }
 
+  root.dataset.siteReady = 'true';
+
   if (!C.enter.enabled) {
     startMusic();
-    initEffects();
     initSiteEffects();
     updateStats();
     loadDiscordServer();
